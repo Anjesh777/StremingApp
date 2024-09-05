@@ -90,7 +90,7 @@ fun RegisterScreen(
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text(text = "Login")
+            Text(text = "Register your Account")
         }
 
         Spacer(modifier = Modifier.height(16.dp))

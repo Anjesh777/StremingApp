@@ -41,7 +41,11 @@ class MainActivity : ComponentActivity() {
                                     }
                                 },
                                 onRegisterClick = {
-                                    navController.navigate("register")
+                                    navController.navigate("register"){
+                                        popUpTo("login"){
+                                            inclusive = true
+                                        }
+                                    }
                                 },
                                 viewModel = viewModel
                             )
@@ -50,7 +54,11 @@ class MainActivity : ComponentActivity() {
                             val viewModel = it.shareViewModel<SampleViewModel>(navController)
                             RegisterScreen(
                                 onLoginClick = {
-                                    navController.navigate("login")
+                                    navController.navigate("login"){
+                                        popUpTo("register"){
+                                            inclusive = true
+                                        }
+                                    }
                                 },
                                 onRegisterClick = {
                                     navController.navigate("home") {
