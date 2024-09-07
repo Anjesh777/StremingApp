@@ -1,5 +1,7 @@
 package com.example.streemapp.Screen
 
+import android.net.Uri
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,9 +12,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -25,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.example.streemapp.R
 import com.example.streemapp.SampleViewModel
@@ -36,8 +40,15 @@ fun LoginScreen(
     viewModel: SampleViewModel
 ){
 
-    var email by remember { mutableStateOf("") }
+    var number by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var passwordVisible by remember { mutableStateOf(false) }
+
+
+
+
+
+
 
     // UI elements
     Column(
@@ -56,11 +67,15 @@ fun LoginScreen(
         )
 
         OutlinedTextField(
-            value = email,
-            onValueChange = { email = it },
-            label = { Text("Email") },
+            value = number,
+            onValueChange = {
+                if(it.all { char -> char.isDigit() }){
+                    number =it
+                }
+            },
+            label = { Text("Phone number") },
             modifier = Modifier.fillMaxWidth(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             singleLine = true
         )
 
@@ -72,8 +87,20 @@ fun LoginScreen(
             label = { Text("Password") },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            visualTransformation = PasswordVisualTransformation(),
-            singleLine = true
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            singleLine = true,
+            trailingIcon = {
+                val image = if (passwordVisible)
+                    painterResource(id = R.drawable.view)
+                else
+                    painterResource(id = R.drawable.hide)
+
+                IconButton(onClick = {
+                    passwordVisible = !passwordVisible
+                }) {
+                    Icon(painter = image, contentDescription = if (passwordVisible) "Hide password" else "Show password")
+                }
+            }
         )
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -81,7 +108,7 @@ fun LoginScreen(
         Button(
             onClick = {
                 // Handle login click
-                viewModel.login(email, password)
+                viewModel.login(number, password)
                 onLoginClick()
             },
             modifier = Modifier.fillMaxWidth()

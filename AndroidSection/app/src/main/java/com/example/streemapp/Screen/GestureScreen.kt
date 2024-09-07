@@ -15,6 +15,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.streemapp.R
 
+// show loading screen or error screen according system status
+
 @Composable
 fun LoadingScreen(modifier: Modifier){
 

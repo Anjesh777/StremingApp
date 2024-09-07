@@ -24,6 +24,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             StreemAppTheme {
+
+                // using nav host to naviage to different screen
+
                 val navController = rememberNavController()
                 NavHost(navController = navController, startDestination = "auth") {
                     navigation(
@@ -79,7 +82,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    // Helper function
+    //navigation Helper function
     @Composable
     inline fun <reified T : ViewModel> NavBackStackEntry.shareViewModel(navController: NavController): T {
         val navGraphRoute = destination.parent?.route ?: return viewModel()

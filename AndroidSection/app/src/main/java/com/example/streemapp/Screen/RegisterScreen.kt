@@ -1,5 +1,8 @@
 package com.example.streemapp.Screen
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -31,14 +34,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
 import com.example.streemapp.R
 import com.example.streemapp.SampleViewModel
-
+// this is register screen
 @Composable
 fun RegisterScreen(
     onRegisterClick: () -> Unit,
@@ -54,6 +59,11 @@ fun RegisterScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     var passwordVisibleRetype by remember { mutableStateOf(false) }
 
+    // for image picker
+    var selectImage by remember { mutableStateOf<Uri?>(null) }
+    var launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) {
+            uri: Uri? ->  selectImage = uri
+    }
 
 
     Column(
@@ -66,18 +76,36 @@ fun RegisterScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Image(
-            painter = painterResource(id = R.drawable.user),
-            contentDescription = "login icon",
-            modifier = Modifier
-                .size(150.dp)
-                .clip(CircleShape)
-                .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape)
-        )
+        if (selectImage==null){  // condition check either to show system image or selected image
+
+            Image(
+                painter = painterResource(id = R.drawable.user),
+                contentDescription = "login icon",
+                modifier = Modifier
+                    .size(150.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape),
+                contentScale = ContentScale.Crop
+            )
+
+        } else{
+            Image(
+                painter = rememberAsyncImagePainter(model = selectImage),
+                contentDescription = "login icon",
+                modifier = Modifier
+                    .size(150.dp)
+                    .clip(CircleShape)
+                    .border(2.dp, MaterialTheme.colorScheme.primary, CircleShape),
+                contentScale = ContentScale.Crop
+
+            )
+        }
+
+
 
         Spacer(modifier = Modifier.height(8.dp))
         TextButton(
-            onClick = onLoginClick,
+            onClick = {launcher.launch("image/*")},
         ) {
             Text(
                 text = "Upload Image",
@@ -155,7 +183,7 @@ fun RegisterScreen(
         OutlinedTextField(
             value = retypePassword,
             onValueChange = { retypePassword = it },
-            label = { Text("Password") },
+            label = { Text("Retype Password") },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             visualTransformation = if (passwordVisibleRetype) VisualTransformation.None else PasswordVisualTransformation(),
@@ -173,6 +201,8 @@ fun RegisterScreen(
                 }
             }
         )
+        Spacer(modifier = Modifier.height(7.dp))
+
         Button(
             onClick = {
                 // Handle Register click
@@ -192,11 +222,6 @@ fun RegisterScreen(
         ) {
             Text(text = "Have an account? Loing")
         }
-
-
-
-
-
     }
     
 }

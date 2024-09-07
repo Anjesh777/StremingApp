@@ -58,8 +58,12 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-    implementation (libs.androidx.navigation.compose)
+
+    // developer added
+    implementation(libs.androidx.material3) //for material design
+    implementation (libs.androidx.navigation.compose) //use to navigae to different scrren
+    implementation(libs.coil.compose) //used to upload image
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
