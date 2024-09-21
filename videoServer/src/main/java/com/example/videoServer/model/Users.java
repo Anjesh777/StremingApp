@@ -19,6 +19,6 @@ public class Users {
     private int id;
     private String email;
     private String password;
-
-
+    private String district;
+    private String city;
 }

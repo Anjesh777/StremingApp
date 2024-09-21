@@ -1,0 +1,96 @@
+
+<div class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+      <img class="mx-auto h-10 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
+      <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Register your account</h2>
+    </div>
+  
+    <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm ">
+      <form class="space-y-6" action="#" method="POST" [formGroup]="registerForm">
+        <div>
+          <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+          <div class="mt-2">
+            <input id="email" name="email" type="email" autocomplete="email" formControlName="email" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            <div class="text-danger">
+                
+                                
+                 @if (registerForm.controls['email'].errors?.['email']) {
+
+                        <i class="fa-solid fa-triangle-exclamation" style="color: #ff2e2e;"></i><span class="text-red-700">Invalid Email</span>
+                }
+      
+              </div>
+        
+        </div>
+        </div>
+        
+        <div class="flex space-x-5 ">
+            <div>
+                    <label for="District" class="block text-sm font-medium leading-6 text-gray-900">District address</label>
+                    <div class="mt-2">
+                        <select name="district_combo" [(ngModel)]="city" [ngModelOptions]="{standalone:true}" id="district" class="block w-28 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 md:w-48">
+                            @for (item of getDistrictKey(); track $index) {
+                                <option value="{{item}}">{{item}}</option>
+                            }
+                        </select>
+                    </div>
+                   
+      
+            </div>
+            <div>
+                <label for="District" class="block text-sm font-medium leading-6 text-gray-900">City</label>
+                <div class="mt-2">
+                    <select name="city" formControlName="city" id="place" class="block w-28 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 md:w-44">
+                        @for (item of getListedCity(); track $index) {
+                            <option value="{{item}}">{{item}}</option>
+                        }
+                        
+                    </select>
+                </div>
+        </div>
+            
+        </div>
+
+        <div>
+            <div>
+                <div class="flex items-center justify-between">
+                    <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+                </div>
+                <div class="mt-2">
+                    <input id="password" name="password" type="password"  autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" formControlName="password">
+                    @if(registerForm.controls['password'].errors?.['minlength']){
+                        <i class="fa-solid fa-triangle-exclamation" style="color: #ff2e2e;"></i><span class="text-red-700">Password must be 8 charactor long</span>
+                    }
+                </div>
+            </div>    
+            <div class="mt-4">
+                <div class="flex items-center justify-between">
+                    <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Retype Password</label>
+                </div>
+                <div class="mt-2">
+                    <input id="re-password"  name="retype_password" type="password" autocomplete="current-password" required class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" formControlName="retype_password">
+                    @if(registerForm.controls['retype_password'].errors?.['minlength']){
+                        <i class="fa-solid fa-triangle-exclamation" style="color: #ff2e2e;"></i><span class="text-red-700">Password must be 8 charactor long</span>
+                    }
+
+                </div>
+            </div> 
+        </div>
+  
+        <div>
+            @if (registerForm.invalid) {
+                <button type="submit" [disabled]="registerForm.invalid"  (click)="onSave()" class="flex w-full justify-center rounded-md bg-indigo-300 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    Register
+                  </button>
+            }
+            @else {
+                <button type="submit" (click)="onSave()" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    Register
+                  </button>
+            }
+            
+          </div>
+      </form>
+    </div>
+  </div>
+  
