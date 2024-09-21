@@ -1,6 +1,7 @@
 import { CommonModule, JsonPipe } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder,  FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, ElementRef, NgModule, ViewChild, viewChild } from '@angular/core';
+import {  AbstractControl, FormBuilder,  FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validator, ValidatorFn, Validators } from '@angular/forms';
+
 
 @Component({
   selector: 'app-register',
@@ -11,6 +12,14 @@ import { FormBuilder,  FormGroup, FormsModule, ReactiveFormsModule, Validators }
 })
 export class RegisterComponent {
 
+
+  isfocus:boolean=false
+
+  toggle(){
+    this.isfocus =!this.isfocus
+  }
+
+
   registerForm: FormGroup;
 
   constructor(private formBuilder: FormBuilder) {
@@ -19,17 +28,29 @@ export class RegisterComponent {
       city: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       retype_password: ['',[Validators.required, Validators.minLength(8)]]
-
-
-    });
+    },
+    {validators: this.passwordmatchValidator()}
+  
+  );
   }
 
-  getpassword(){
-    return this.registerForm.controls['password']
+
+  passwordmatchValidator(): ValidatorFn{
+
+    return (control: AbstractControl): ValidationErrors | null => {
+      
+      const password = control.get('password')
+      const retypePassword = control.get('retype_password');
+
+      if (password && retypePassword && password.value !== retypePassword.value) {
+        return { passwordsNotMatch: true };
+      }
+      return null;
+    };
+
   }
-  getretype_password(){
-    return this.registerForm.controls['retype_password']
-  }
+
+ 
   
   
 
