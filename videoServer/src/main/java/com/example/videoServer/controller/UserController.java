@@ -1,6 +1,7 @@
 package com.example.videoServer.controller;
 
 import com.example.videoServer.model.Users;
+import com.example.videoServer.service.SendEmailService;
 import com.example.videoServer.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,9 @@ public class UserController {
 
     @Autowired
     private UserService service;
+
+    @Autowired
+    private SendEmailService sendEmailService;
 
     @CrossOrigin("http://localhost:4200")
     @GetMapping("getListOfDistrict")
@@ -43,6 +47,8 @@ public class UserController {
     @CrossOrigin("http://localhost:4200")
     @PostMapping("/register")
     public Users register(@RequestBody Users user) {
+
+        sendEmailService.sendEmail(user.getEmail(),"Test Body","TestSubject");
         return service.register(user);
     }
 
