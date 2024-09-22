@@ -1,37 +1,42 @@
 import { CommonModule, JsonPipe } from '@angular/common';
-import { Component, ElementRef, NgModule, ViewChild, viewChild } from '@angular/core';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { Component, inject } from '@angular/core';
 import {  AbstractControl, FormBuilder,  FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validator, ValidatorFn, Validators } from '@angular/forms';
 
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [FormsModule,JsonPipe,ReactiveFormsModule,CommonModule],
+  imports: [FormsModule,JsonPipe,ReactiveFormsModule,CommonModule,HttpClientModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
 
 
-  isfocus:boolean=false
 
-  toggle(){
-    this.isfocus =!this.isfocus
-  }
+  isfocus:boolean=false
+  userDetails:any ={}
+  district:{[key:string]: string[]} = {}
+
+  
+
 
 
   registerForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private formBuilder: FormBuilder, http:HttpClient) {
     this.registerForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       city: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       retype_password: ['',[Validators.required, Validators.minLength(8)]]
     },
-    {validators: this.passwordmatchValidator()}
-  
+    {validators: this.passwordmatchValidator()},
   );
+
+  debugger
+  this.getListofLocationObj();
   }
 
 
@@ -50,117 +55,31 @@ export class RegisterComponent {
 
   }
 
- 
-  
-  
-
-
-  onSave() {
-    
-    
-
-  }
-  
-
-  district:{[key:string]: string[]} = {
-
-    Bhojpur: ["Bhojpur Municipality", "Shadananda"],
-    Dhankuta: ["Dhankuta Municipality", "Pakhribas"],
-    Ilam: ["Ilam Municipality", "Mai"],
-    Jhapa: ["Bhadrapur", "Damak", "Mechinagar","Birtamode"],
-    Khotang: ["Diktel", "Halesi"],
-    Morang: ["Biratnagar", "Belbari"],
-    Okhaldhunga: ["Siddhicharan", "Molung"],
-    Panchthar: ["Phidim"],
-    Sankhuwasabha: ["Khandbari", "Chainpur"],
-    Solukhumbu: ["Salleri", "Namche Bazaar"],
-    Sunsari: ["Inaruwa", "Itahari", "Dharan"],
-    Taplejung: ["Phungling", "Mikwakhola"],
-    Terhathum: ["Myanglung"],
-    Udayapur: ["Triyuga", "Katari"],
-
-    Bara: ["Kalaiya", "Nijgadh"],
-    Dhanusha: ["Janakpur", "Dhanushadham"],
-    Mahottari: ["Jaleshwor", "Gaushala"],
-    Parsa: ["Birgunj"],
-    Rautahat: ["Gaur", "Chandranigahapur"],
-    Saptari: ["Rajbiraj"],
-    Sarlahi: ["Malangwa"],
-    Siraha: ["Siraha", "Lahan"],
-
-    Bhaktapur: ["Bhaktapur", "Thimi"],
-    Chitwan: ["Bharatpur", "Ratnanagar"],
-    Dhading: ["Dhadingbesi"],
-    Dolakha: ["Charikot"],
-    Kathmandu: ["Kathmandu", "Kirtipur", "Budhanilkantha"],
-    Kavrepalanchok: ["Dhulikhel", "Panauti"],
-    Lalitpur: ["Lalitpur", "Godavari"],
-    Makwanpur: ["Hetauda"],
-    Nuwakot: ["Bidur"],
-    Ramechhap: ["Manthali"],
-    Rasuwa: ["Dhunche"],
-    Sindhuli: ["Kamalamai"],
-    Sindhupalchok: ["Chautara"],
-
-    Baglung: ["Baglung Municipality", "Galkot"],
-    Gorkha: ["Gorkha Municipality"],
-    Kaski: ["Pokhara", "Lekhnath"],
-    Lamjung: ["Besisahar"],
-    Manang: ["Chame"],
-    Mustang: ["Jomsom"],
-    Myagdi: ["Beni"],
-    Nawalpur: ["Kawasoti"],
-    Parbat: ["Kushma"],
-    Syangja: ["Putalibazar"],
-    Tanahun: ["Damauli"],
-
-    Arghakhanchi: ["Sandhikharka"],
-    Banke: ["Nepalgunj"],
-    Bardiya: ["Gulariya"],
-    Dang: ["Ghorahi", "Tulsipur"],
-    Gulmi: ["Tamghas"],
-    Kapilvastu: ["Taulihawa"],
-    Parasi: ["Parasi"],
-    Palpa: ["Tansen"],
-    Pyuthan: ["Pyuthan"],
-    Rolpa: ["Liwang"],
-    "Rukum (East)": ["Rukumkot"],
-    Rupandehi: ["Butwal", "Bhairahawa"],
-
-    Dailekh: ["Narayan"],
-    Dolpa: ["Dunai"],
-    Humla: ["Simikot"],
-    Jajarkot: ["Khalanga"],
-    Jumla: ["Khalanga"],
-    Kalikot: ["Manma"],
-    Mugu: ["Gamgadhi"],
-    "Rukum (West)": ["Musikot"],
-    Salyan: ["Salyan"],
-    Surkhet: ["Birendranagar"],
-
-    Achham: ["Mangalsen"],
-    Baitadi: ["Dasharathchand"],
-    Bajhang: ["Chainpur"],
-    Bajura: ["Martadi"],
-    Dadeldhura: ["Amargadhi"],
-    Darchula: ["Darchula"],
-    Doti: ["Dipayal"],
-    Kailali: ["Dhangadhi"],
-    Kanchanpur: ["Mahendranagar"],
-  }
 
   formvalue:any;
-  city:string=''
+
+// return distict name  
+  districStr:string=''
   
-  
+  getListofLocationObj(){
+    this.http.get("http://localhost:3000/getListOfDistrict").subscribe((res:any) =>{
+      this.district = res
+    }, err =>{
+      console.log("fail to feech api")
+    }
+  )
 
 
-  // Returns the list of cities based on the selected state (city)
+
+  }
+  
+
+// Returns the list of cities based on the selected state (city)
   getListedCity(){
-    if(this.city){
+    if(this.districStr){
       const selectedCities: string[] =[];
       for(const district in this.district){
-        if(district === this.city){
+        if(district === this.districStr){
           selectedCities.push(...this.district[district])
         }
       }
@@ -169,15 +88,40 @@ export class RegisterComponent {
     return [];
   }
 
+  // return list of district 
   getDistrictKey(): string[]{
     return Object.keys(this.district)
   }
-  
+
+
+  http=inject(HttpClient)
+
+onSave(){
+  const formValues = this.registerForm.value;
+    this.userDetails={
+            "email": formValues.email,
+            "district": this.districStr,
+            "city": formValues.city,
+            "password": formValues.password
+    }
+
+    this.http.post("http://localhost:3000/register",this.userDetails).subscribe((res:any)=>{
+      alert("Account Register Sucessful")
+
+    },
+    (error) =>{
+      if(error.status == 400){
+        alert("Validation failed. Please check your input.");
+      }
+      else if(error.status == 401){
+        alert("User name alread existe.");
+      }
+
+
+    }
+  )
+}
 
   
-
-  
-
-
 
 }
