@@ -2,6 +2,7 @@ import { CommonModule, JsonPipe } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, inject } from '@angular/core';
 import {  AbstractControl, FormBuilder,  FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validator, ValidatorFn, Validators } from '@angular/forms';
+import {  Router } from '@angular/router';
 
 
 @Component({
@@ -18,6 +19,13 @@ export class RegisterComponent {
   isfocus:boolean=false
   userDetails:any ={}
   district:{[key:string]: string[]} = {}
+  formvalue:any;
+  // return distict name  
+  districStr:string=''
+  isRegister:boolean=false
+  isError: boolean= false
+
+ 
 
   
 
@@ -25,7 +33,7 @@ export class RegisterComponent {
 
   registerForm: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, http:HttpClient) {
+  constructor(private formBuilder: FormBuilder, http:HttpClient,private router: Router) {
     this.registerForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       city: ['', [Validators.required]],
@@ -35,7 +43,6 @@ export class RegisterComponent {
     {validators: this.passwordmatchValidator()},
   );
 
-  debugger
   this.getListofLocationObj();
   }
 
@@ -56,13 +63,9 @@ export class RegisterComponent {
   }
 
 
-  formvalue:any;
 
-// return distict name  
-  districStr:string=''
-  
   getListofLocationObj(){
-    this.http.get("http://localhost:3000/getListOfDistrict").subscribe((res:any) =>{
+    this.http.get("http://localhost:3000/register/getListOfDistrict").subscribe((res:any) =>{
       this.district = res
     }, err =>{
       console.log("fail to feech api")
@@ -96,6 +99,8 @@ export class RegisterComponent {
 
   http=inject(HttpClient)
 
+
+
 onSave(){
   const formValues = this.registerForm.value;
     this.userDetails={
@@ -103,24 +108,30 @@ onSave(){
             "district": this.districStr,
             "city": formValues.city,
             "password": formValues.password
+
     }
 
-    this.http.post("http://localhost:3000/register",this.userDetails).subscribe((res:any)=>{
-      alert("Account Register Sucessful")
 
+    this.http.post("http://localhost:3000/register",this.userDetails).subscribe((res:any)=>{
+
+      this.isRegister=true
     },
     (error) =>{
-      if(error.status == 400){
-        alert("Validation failed. Please check your input.");
-      }
-      else if(error.status == 401){
-        alert("User name alread existe.");
-      }
-
-
+      console.log(error)
+      this.isError=true
     }
   )
 }
+
+onSuccess(){
+
+  this.isRegister=false
+  this.router.navigate(['/verification'])
+
+
+}
+
+
 
   
 

@@ -19,5 +19,6 @@ public class Users {
     private String district;
     private String city;
     private String password;
+    private boolean isVerified=false;
 
 }

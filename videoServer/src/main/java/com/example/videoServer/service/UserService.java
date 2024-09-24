@@ -2,7 +2,6 @@ package com.example.videoServer.service;
 
 import com.example.videoServer.model.Users;
 import com.example.videoServer.repo.UserRepo;
-import com.example.videoServer.service.JWTService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,10 +26,10 @@ public class UserService {
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
 
-    public Users register(Users user) {
+    public boolean register(Users user) {
         user.setPassword(encoder.encode(user.getPassword()));
         repo.save(user);
-        return user;
+        return true;
     }
 
     public String verify(Users user) {
@@ -45,4 +44,6 @@ public class UserService {
     public List<Users> getall(){
         return repo.findAll();
     }
+
+
 }
