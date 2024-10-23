@@ -1,7 +1,9 @@
 package com.example.videoServer.config;
 
+
 import com.example.videoServer.service.JWTService;
 import com.example.videoServer.service.MyUserDetailsService;
+import com.example.videoServer.service.TokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,17 +23,27 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Autowired
     private JWTService jwtService;
-
-
-
     @Autowired
-    ApplicationContext context;
+    private ApplicationContext context;
+    @Autowired
+    private TokenService tokenService;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 //  Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJraWxsIiwiaWF0IjoxNzIzMTgzNzExLCJleHAiOjE3MjMxODM4MTl9.5nf7dRzKRiuGurN2B9dHh_M5xiu73ZzWPr6rbhOTTHs
-        String authHeader = request.getHeader("Authorization");
-        String token = null;
+
+
+        ;
+
+       // String authHeader = request.getHeader("Authorization");
+          String authHeader = tokenService.getToken();
+
+
+        System.out.println("Incoming request URL: " + request.getRequestURI());
+        System.out.println("Authorization header: " + authHeader);
+
+        String token = tokenService.getToken();
         String username = null;
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {

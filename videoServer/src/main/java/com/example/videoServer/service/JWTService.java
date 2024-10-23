@@ -28,6 +28,7 @@ public class JWTService {
             KeyGenerator keyGen = KeyGenerator.getInstance("HmacSHA256");
             SecretKey sk = keyGen.generateKey();
             secretkey = Base64.getEncoder().encodeToString(sk.getEncoded());
+            System.out.println(secretkey+" is");
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
@@ -40,7 +41,7 @@ public class JWTService {
                 .add(claims)
                 .subject(username)
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 30))
+                .expiration(new Date(System.currentTimeMillis() + 60 * 60 * 30 * 30))
                 .and()
                 .signWith(getKey())
                 .compact();

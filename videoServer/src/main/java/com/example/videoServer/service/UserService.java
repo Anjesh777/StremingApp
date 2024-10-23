@@ -16,10 +16,8 @@ public class UserService {
 
     @Autowired
     private JWTService jwtService;
-
     @Autowired
     AuthenticationManager authManager;
-
     @Autowired
     private UserRepo repo;
 
@@ -35,7 +33,10 @@ public class UserService {
     public String verify(Users user) {
         Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
         if (authentication.isAuthenticated()) {
-            return jwtService.generateToken(user.getEmail());
+            String token=jwtService.generateToken(user.getEmail());
+            System.out.println("token is "+(token));
+
+            return token;
         } else {
             return "fail";
         }
@@ -43,6 +44,15 @@ public class UserService {
 
     public List<Users> getall(){
         return repo.findAll();
+    }
+
+    public void setVerifiedStatus(String email){
+        Users user= repo.findByEmail(email);
+        if (user != null){
+            user.setIsVerified("true");
+            repo.save(user);
+        }
+
     }
 
 
