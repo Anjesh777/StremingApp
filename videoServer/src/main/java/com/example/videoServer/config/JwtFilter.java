@@ -1,5 +1,6 @@
 package com.example.videoServer.config;
 
+import io.jsonwebtoken.security.SignatureException;  // Correct exception
 
 import com.example.videoServer.service.JWTService;
 import com.example.videoServer.service.MyUserDetailsService;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
+
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 
@@ -46,10 +49,18 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = tokenService.getToken();
         String username = null;
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7);
-            username = jwtService.extractUserName(token);
+        try {
+            if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                token = authHeader.substring(7);
+                username = jwtService.extractUserName(token);
+            }
+        } catch (SignatureException e) {
+
+            System.out.println("Invalid JWT Signature: "+e.toString());
+
         }
+
+
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = context.getBean(MyUserDetailsService.class).loadUserByUsername(username);

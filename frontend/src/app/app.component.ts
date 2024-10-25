@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject, Inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { HeaderserviceService } from './service/headerservice.service';
 
 @Component({
   selector: 'app-root',
@@ -11,10 +12,18 @@ import { RouterLink, RouterOutlet } from '@angular/router';
 export class AppComponent {
   title = 'frontend';
 
-  
   isLogin:boolean=false
   toggleDetails:boolean=false
 
+  headerService = inject(HeaderserviceService)
+
+  
+
+  ngOnInit(): void {
+    this.headerService.homeHide();
+  }
+
+ 
   
 
 

@@ -2,6 +2,8 @@ import { HttpClient, HttpClientModule, HttpErrorResponse } from '@angular/common
 import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import {  Router } from '@angular/router';
+import { routes } from '../../app.routes';
+import { HeaderserviceService } from '../../service/headerservice.service';
 
 
 @Component({
@@ -22,6 +24,8 @@ export class LoginComponent {
 
   http = inject(HttpClient)
   router = inject(Router)
+  header = inject(HeaderserviceService)
+  
 
   constructor(private formBuilder: FormBuilder) {
     this.loginForm = this.formBuilder.group({
@@ -38,6 +42,7 @@ export class LoginComponent {
       "password": formValues.password
     };
     
+    
   
     this.http.post("http://localhost:3000/login", this.userDetails,{responseType: 'text' }).subscribe(
       (res: any) => {
@@ -45,6 +50,7 @@ export class LoginComponent {
         this.isError = false;
         localStorage.setItem('token', res);
         this.Message = res;
+        sessionStorage.setItem('useremail',this.userDetails.email)
         this.router.navigateByUrl('/home')
       },
       (error: HttpErrorResponse) => {
@@ -61,6 +67,8 @@ export class LoginComponent {
       }
     );
   }
+
+
   
   
   

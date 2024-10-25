@@ -1,5 +1,5 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders} from '@angular/common/http';
-import { Component, inject, OnInit } from '@angular/core';
+import { HttpClient} from '@angular/common/http';
+import { Component, inject } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { HeaderserviceService } from '../../service/headerservice.service';
 
@@ -13,25 +13,29 @@ import { HeaderserviceService } from '../../service/headerservice.service';
 export class HomeComponent  {
   homeList: any=[];
   http = inject(HttpClient)
+  router=inject(Router)
   private headerService = inject(HeaderserviceService)
 
 
-
+  
+  
   ngOnInit(): void{
-
     this.headerService.sendHeader()
-
+      .subscribe((isvalidate:boolean) =>{
+        if(isvalidate){
+          this.router.navigateByUrl('/home')
+          
+        }
+        else{
+          this.router.navigateByUrl('/login')
+        }
+      }
+    )
+    this.headerService.homeHide();
   }
-    
 
-
-
-  
-
-  
 
    getAll() {
-     const token = localStorage.getItem('token');
      this.http.get("http://localhost:3000/getAll").subscribe(
        (res: any) => {
          console.log("Api work")

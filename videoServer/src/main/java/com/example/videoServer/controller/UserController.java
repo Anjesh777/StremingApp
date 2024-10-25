@@ -1,5 +1,6 @@
 package com.example.videoServer.controller;
 
+import com.example.videoServer.dto.UserDTO;
 import com.example.videoServer.model.Users;
 import com.example.videoServer.service.SendEmailService;
 import com.example.videoServer.service.TokenService;
@@ -65,8 +66,8 @@ public class UserController {
 
         otpSystem= utilityClass1.generateRandomNumber();
         otpGeneratedTime = LocalDateTime.now();
-        System.out.println("System Generated Otp"+otpSystem);
        if (user !=null){
+
            usersObj.setEmail(user.getEmail());
            service.register(user);
            sendEmailService.sendEmail(user.getEmail(), "System Generated OTP: " + otpSystem, "otp");
@@ -105,9 +106,9 @@ public class UserController {
 //    }
     @PostMapping("login")
     public String login(@RequestBody Users user) {
-
          return service.verify(user);
     }
+
 
 //    public List<Users> getAll() {
 //        return service.getall();
@@ -116,7 +117,7 @@ public class UserController {
 
 
     @PostMapping("/header")
-    public void check(@RequestHeader("Authorization") @Nullable String token){
+    public void check(@RequestHeader("Authorization") String token){
         System.out.println("Received Token "+token);
         tokenService.setToken(token);
     }
@@ -126,7 +127,10 @@ public class UserController {
         System.out.println("Api work");
     }
 
-
+    @PostMapping("/details")
+    public UserDTO users(@RequestBody String email){
+        return service.getUserDetails(email);
+    }
 
 
 

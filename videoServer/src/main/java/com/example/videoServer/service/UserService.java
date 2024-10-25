@@ -1,5 +1,6 @@
 package com.example.videoServer.service;
 
+import com.example.videoServer.dto.UserDTO;
 import com.example.videoServer.model.Users;
 import com.example.videoServer.repo.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +43,13 @@ public class UserService {
         }
     }
 
-    public List<Users> getall(){
-        return repo.findAll();
+    public UserDTO getUserDetails(String email){
+        return repo.findByEmailExcludingPassword(email);
     }
+
+//    public List<Users> getall(){
+//        return repo.findAll();
+//    }
 
     public void setVerifiedStatus(String email){
         Users user= repo.findByEmail(email);

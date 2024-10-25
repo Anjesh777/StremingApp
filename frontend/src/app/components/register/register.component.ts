@@ -27,6 +27,7 @@ export class RegisterComponent {
   constructor(private formBuilder: FormBuilder, private router: Router) {
     this.registerForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
+      username:['',[Validators.required,Validators.minLength(6)]],
       city: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       retype_password: ['', [Validators.required, Validators.minLength(8)]]
@@ -78,10 +79,14 @@ export class RegisterComponent {
     const formValues = this.registerForm.value;
     this.userDetails = {
       "email": formValues.email,
+      "username":formValues.username,
       "district": this.districStr,
       "city": formValues.city,
       "password": formValues.password
     };
+
+    console.log(this.userDetails)
+    debugger
 
     this.http.post("http://localhost:3000/register", this.userDetails).subscribe((res: any) => {
       this.isRegister = true;

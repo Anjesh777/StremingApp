@@ -3,6 +3,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { OtpComponent } from './components/otp/otp.component';
 import { HomeComponent } from './components/home/home.component';
+import { AccountComponent } from './components/account/account.component';
 
 export const routes: Routes = [
     {
@@ -21,6 +22,10 @@ export const routes: Routes = [
         path:"home",
         component:HomeComponent
     },
+    {
+        path:'account',
+        component:AccountComponent
+    }
 
 
 

@@ -16,6 +16,7 @@ public class Users {
     private int id;
     @Column(unique = true)
     private String email;
+    private String username;
     private String district;
     private String city;
     private String password;
