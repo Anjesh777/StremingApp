@@ -9,7 +9,6 @@ import lombok.Getter;
 
 public class UserDTO {
 
-    private int id;
     private String city;
     private String district;
     private String email;

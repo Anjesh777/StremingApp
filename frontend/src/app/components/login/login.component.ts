@@ -52,6 +52,7 @@ export class LoginComponent {
         this.Message = res;
         sessionStorage.setItem('useremail',this.userDetails.email)
         this.router.navigateByUrl('/home')
+        this.header.getuserDetails()
       },
       (error: HttpErrorResponse) => {
         this.isLogin = false;

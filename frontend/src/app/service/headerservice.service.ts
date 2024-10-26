@@ -21,7 +21,10 @@ export class HeaderserviceService {
     return this.http.post("http://localhost:3000/header", { headers })
       .pipe(
         map(response => {
-          console.log("Success", response);
+          if(response==false){
+            this.clearToken()
+            this.router.navigateByUrl("/login")
+          }
           return true;  
         }),
         catchError(error => {
@@ -50,13 +53,18 @@ export class HeaderserviceService {
    clearToken(){
     localStorage.clear();
   }
+  getLocalStorage(name:string){
+    const data = localStorage.getItem(name)
+    return data ? JSON.parse(data):null
+  }
+
 
   getuserDetails(){
 
     const email = sessionStorage.getItem('useremail')
     this.http.post("http://localhost:3000/details",email,{responseType:'json'}).subscribe(
       (res: any) =>{
-        this.jsonData=res
+        localStorage.setItem("userData",JSON.stringify(res))
         console.log(this.jsonData)
       },
       (error:HttpErrorResponse) =>{

@@ -1,5 +1,6 @@
 package com.example.videoServer.service;
 
+import com.example.videoServer.dto.TokenDTo;
 import com.example.videoServer.dto.UserDTO;
 import com.example.videoServer.model.Users;
 import com.example.videoServer.repo.UserRepo;
@@ -21,6 +22,8 @@ public class UserService {
     AuthenticationManager authManager;
     @Autowired
     private UserRepo repo;
+    @Autowired
+    private TokenDTo tokenDTo;
 
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
@@ -35,8 +38,7 @@ public class UserService {
         Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
         if (authentication.isAuthenticated()) {
             String token=jwtService.generateToken(user.getEmail());
-            System.out.println("token is "+(token));
-
+            tokenDTo.setCheckToken(token);
             return token;
         } else {
             return "fail";

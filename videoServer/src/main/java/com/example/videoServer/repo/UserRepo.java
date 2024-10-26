@@ -12,7 +12,7 @@ public interface UserRepo extends JpaRepository<Users, Integer> {
 
 
     Users findByEmail(String email);
-    @Query("SELECT new com.example.videoServer.dto.UserDTO(u.id, u.city, u.district, u.email, u.isVerified, u.username) FROM Users u WHERE u.email = :email")
+    @Query("SELECT new com.example.videoServer.dto.UserDTO(u.city, u.district, u.email, u.isVerified, u.username) FROM Users u WHERE u.email = :email")
     //!! package name should be give when custom jpa query is used
     public UserDTO findByEmailExcludingPassword(@Param("email") String email);
 
