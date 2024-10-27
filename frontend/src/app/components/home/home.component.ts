@@ -14,16 +14,18 @@ export class HomeComponent  {
   homeList: any=[];
   http = inject(HttpClient)
   router=inject(Router)
-  private headerService = inject(HeaderserviceService)
+   headerService = inject(HeaderserviceService)
 
 
   
   
   ngOnInit(): void{
     this.headerService.sendHeader()
+    
       .subscribe((isvalidate:boolean) =>{
         if(isvalidate){
-          this.router.navigateByUrl('/home')
+          this.headerService.getuserDetails()
+          //this.router.navigateByUrl('/home')
           
         }
         else{
@@ -36,6 +38,7 @@ export class HomeComponent  {
 
 
    getAll() {
+    
      this.http.get("http://localhost:3000/getAll").subscribe(
        (res: any) => {
          console.log("Api work")

@@ -36,9 +36,8 @@ public class JwtFilter extends OncePerRequestFilter {
 //  Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJraWxsIiwiaWF0IjoxNzIzMTgzNzExLCJleHAiOjE3MjMxODM4MTl9.5nf7dRzKRiuGurN2B9dHh_M5xiu73ZzWPr6rbhOTTHs
 
 
-        ;
 
-       // String authHeader = request.getHeader("Authorization");
+
         String authHeader = tokenService.getToken();
 
 

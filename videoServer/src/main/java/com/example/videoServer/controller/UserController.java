@@ -63,17 +63,17 @@ public class UserController {
 
         otpSystem= utilityClass1.generateRandomNumber();
         otpGeneratedTime = LocalDateTime.now();
-       if (user !=null){
-           usersObj.setEmail(user.getEmail());
-           service.register(user);
-           sendEmailService.sendEmail(user.getEmail(), "System Generated OTP: " + otpSystem, "otp");
-           return new ResponseEntity<>(HttpStatus.CREATED);
-       }
-       else {
-           return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-       }
+        if (user !=null){
+            usersObj.setEmail(user.getEmail());
+            service.register(user);
+            sendEmailService.sendEmail(user.getEmail(), "System Generated OTP: " + otpSystem, "otp");
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
-//
+    //
 //    @GetMapping("register/otpVerification")
 //    public ResponseEntity<String> otpVerification(@RequestParam("otpcode") int otpcode) {
 //
@@ -99,12 +99,11 @@ public class UserController {
 //    }
     @PostMapping("login")
     public String login(@RequestBody Users user) {
-         return service.verify(user);
+        return service.verify(user);
     }
 
     @PostMapping("/header")
     public boolean check(@RequestHeader("Authorization") String token){
-        System.out.println("Received Token "+token);
         tokenService.setToken(token);
         return tokenService.checkToken();
     }

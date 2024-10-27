@@ -10,7 +10,7 @@ export class HeaderserviceService {
 
 
 
-
+  firtInit:boolean=true;
   jsonData:any;
   http = inject(HttpClient)
   router = inject(Router)
@@ -21,8 +21,8 @@ export class HeaderserviceService {
     return this.http.post("http://localhost:3000/header", { headers })
       .pipe(
         map(response => {
-          if(response==false){
-            this.clearToken()
+          if(!response){
+            console.log(response)
             this.router.navigateByUrl("/login")
           }
           return true;  
@@ -61,7 +61,8 @@ export class HeaderserviceService {
 
   getuserDetails(){
 
-    const email = sessionStorage.getItem('useremail')
+    const email = localStorage.getItem('useremail')
+
     this.http.post("http://localhost:3000/details",email,{responseType:'json'}).subscribe(
       (res: any) =>{
         localStorage.setItem("userData",JSON.stringify(res))

@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,6 +25,8 @@ public class UserService {
     private UserRepo repo;
     @Autowired
     private TokenDTo tokenDTo;
+    private List<TokenDTo> userTokenList = new ArrayList<>();
+
 
 
     private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
@@ -35,13 +38,40 @@ public class UserService {
     }
 
     public String verify(Users user) {
-        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+        // Authenticate the user
+        Authentication authentication = authManager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword())
+        );
+
         if (authentication.isAuthenticated()) {
-            String token=jwtService.generateToken(user.getEmail());
-            tokenDTo.setCheckToken(token);
-            return token;
+            String newToken = jwtService.generateToken(user.getEmail());
+            // changed here
+            tokenDTo.setCheckToken(newToken);
+
+            boolean userExists = false;
+            for (TokenDTo tokenDTo : userTokenList) {
+                if (tokenDTo.getUser().getEmail().equals(user.getEmail())) {
+                    tokenDTo.setCheckToken(newToken);  // Update token
+                    userExists = true;
+                    break;
+                }
+            }
+
+            if (!userExists) {
+                userTokenList.add(new TokenDTo(user, newToken));
+            }
+
+            printUserTokenList();
+
+            return newToken;
         } else {
             return "fail";
+        }
+    }
+
+    private void printUserTokenList() {
+        for (TokenDTo tokenDTo : userTokenList) {
+            System.out.println("User: " + tokenDTo.getUser().getEmail() + ", Token: " + tokenDTo.getToken());
         }
     }
 

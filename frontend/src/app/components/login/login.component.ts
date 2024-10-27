@@ -1,5 +1,5 @@
 import { HttpClient, HttpClientModule, HttpErrorResponse } from '@angular/common/http';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import {  Router } from '@angular/router';
 import { routes } from '../../app.routes';
@@ -33,6 +33,9 @@ export class LoginComponent {
       password: ['', [Validators.required, Validators.minLength(8)]]
     });
   }
+  ngOnInit(): void {
+    localStorage.clear();
+  }
   
 
   onLogin() {
@@ -46,13 +49,13 @@ export class LoginComponent {
   
     this.http.post("http://localhost:3000/login", this.userDetails,{responseType: 'text' }).subscribe(
       (res: any) => {
+
         this.isLogin = true;
         this.isError = false;
         localStorage.setItem('token', res);
         this.Message = res;
-        sessionStorage.setItem('useremail',this.userDetails.email)
+        localStorage.setItem('useremail',this.userDetails.email)
         this.router.navigateByUrl('/home')
-        this.header.getuserDetails()
       },
       (error: HttpErrorResponse) => {
         this.isLogin = false;
